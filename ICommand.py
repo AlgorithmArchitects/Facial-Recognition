@@ -1,17 +1,18 @@
-from abc import ABCMeta, abstractmethod
+import abc
 
-class ICommand(metaclass=ABCMeta):
-    @staticmethod
-    @abstractmethod
-    def name():
-        raise NotImplementedError
-    
-    @staticmethod
-    @abstractmethod
-    def description():
-        raise NotImplementedError
-    
-    @staticmethod
-    @abstractmethod
-    def performCommand(argumentList, openCrWrapper):
-        raise NotImplementedError
+class ICommand(object):
+	__metaclass__ = abc.ABCMeta
+	@staticmethod
+	@abc.abstractmethod
+	def name():
+		raise NotImplementedError
+	
+	@staticmethod
+	@abc.abstractmethod
+	def description():
+		raise NotImplementedError
+	
+	@staticmethod
+	@abc.abstractmethod
+	def performCommand(argumentList, openCrWrapper):
+		raise NotImplementedError
