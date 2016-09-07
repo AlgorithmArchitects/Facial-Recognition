@@ -7,7 +7,7 @@ class IOpenCrWrapper(object):
 		pass
 	
 	@abc.abstractmethod
-	def tryAddNewPerson(self, personInfo, imageFilePath):#returns true if added, false otherwise
+	def tryAddNewPerson(self, personInfo):#returns true if added, false otherwise
 		pass
 	
 	@abc.abstractmethod

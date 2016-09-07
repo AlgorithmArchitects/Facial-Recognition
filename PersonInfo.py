@@ -8,9 +8,9 @@ class PersonInfo:
         if not isinstance(idNumber, basestring)\
         	and not isinstance(name, basestring)\
         	and not isinstance(imageFilePath, basestring):
-            raise TypeError
+            raise TypeError("Non-string argument.")
         if (not idNumber) or (not imageFilePath):
-            raise ValueError
+            raise ValueError("Missing argument.")
         
         self.idNumber = idNumber
         self.name = name

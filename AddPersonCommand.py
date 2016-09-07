@@ -1,5 +1,5 @@
 import ICommand
-
+from argparse import ArgumentError
 class AddPersonCommand(ICommand):
     @staticmethod
     def name():
@@ -11,4 +11,18 @@ class AddPersonCommand(ICommand):
     
     @staticmethod
     def performCommand(argumentList, openCrWrapper):
-        raise NotImplementedError
+        if not isinstance(argumentList, collections.Sequence):
+            raise TypeError
+        if argumentList.length != 3:
+            raise ArgumentError("Wrong number of arguments.")
+        if not isinstance(argumentList[0], basestring):
+            raise TypeError("Non-string argument.")
+        if not isinstance(argumentList[1], basestring):
+            raise TypeError("Non-string argument.")
+        if not isinstance(argumentList[2], basestring):
+            raise TypeError("Non-string argument.")
+        if not os.path.isfile(argumentList[0]):
+            raise FileNotFoundError("Given image file does not exist.")
+        
+        person_to_add = PersonInfo(argumentList[0], argumentList[1], argumentList[2])
+        openCrWrapper.tryAddNewPerson(person_to_add)

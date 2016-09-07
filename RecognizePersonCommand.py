@@ -1,4 +1,5 @@
 import ICommand
+from argparse import ArgumentError
 class RecognizePersonCommand(ICommand):
     @staticmethod
     def name():
@@ -10,4 +11,13 @@ class RecognizePersonCommand(ICommand):
     
     @staticmethod
     def performCommand(argumentList, openCrWrapper):
-        raise NotImplementedError
+        if not isinstance(argumentList, collections.Sequence):
+            raise TypeError
+        if argumentList.length != 1:
+            raise ArgumentError("Wrong number of arguments.")
+        if not isinstance(argumentList[0], basestring):
+            raise TypeError("Non-string argument.")
+        if not os.path.isfile(argumentList[0]):
+            raise FileNotFoundError("Given image file does not exist.")
+        
+        return openCrWrapper.getPersonFromImageFilePath(argumentList[0]);
