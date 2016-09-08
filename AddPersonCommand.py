@@ -10,7 +10,7 @@ class AddPersonCommand(ICommand):
         return "Adds a person to the database given three arguments: ID Number, Name, and the file path of their image."
     
     @staticmethod
-    def performCommand(argumentList, openCrWrapper):
+    def perform_command(argumentList, openCrWrapper):
         if not isinstance(argumentList, collections.Sequence):
             raise TypeError
         if argumentList.length != 3:
@@ -25,4 +25,4 @@ class AddPersonCommand(ICommand):
             raise FileNotFoundError("Given image file does not exist.")
         
         person_to_add = PersonInfo(argumentList[0], argumentList[1], argumentList[2])
-        openCrWrapper.tryAddNewPerson(person_to_add)
+        openCrWrapper.try_add_new_person(person_to_add)

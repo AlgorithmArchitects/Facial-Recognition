@@ -1,5 +1,6 @@
 import PersonInfo
 from pip._vendor.distlib.compat import raw_input
+from _csv import Error
 stop = False
 while not stop:
     arguments = raw_input("Enter your command now:")
@@ -9,5 +10,8 @@ while not stop:
         stop = True
     else:
         #process command
-        raise NotImplementedError("process command")
+        try:
+            raise NotImplementedError("process command")
+        except Exception as error:
+            print("ERROR:{0}{1}".format(type(error),error))
     

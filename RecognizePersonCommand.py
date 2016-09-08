@@ -10,7 +10,7 @@ class RecognizePersonCommand(ICommand):
         return "Takes an image file path as an argument and attempts to recognize the person in the image."
     
     @staticmethod
-    def performCommand(argumentList, openCrWrapper):
+    def perform_command(argumentList, openCrWrapper):
         if not isinstance(argumentList, collections.Sequence):
             raise TypeError
         if argumentList.length != 1:
@@ -20,4 +20,4 @@ class RecognizePersonCommand(ICommand):
         if not os.path.isfile(argumentList[0]):
             raise FileNotFoundError("Given image file does not exist.")
         
-        return openCrWrapper.getPersonFromImageFilePath(argumentList[0]);
+        return openCrWrapper.get_person_from_image_file_path(argumentList[0]);

@@ -14,5 +14,5 @@ class ICommand(object):
 	
 	@staticmethod
 	@abc.abstractmethod
-	def performCommand(argumentList, openCrWrapper):#accepts an array of arguments and an OpenCvWrapper and performs the given operation
+	def perform_command(argumentList, openCrWrapper):#accepts an array of arguments and an OpenCvWrapper and performs the given operation
 		raise NotImplementedError
