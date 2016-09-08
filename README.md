@@ -2,15 +2,18 @@
 
 ### Requirements
 1. Python 2.7 (https://www.python.org/download/releases/2.7.2/)
-2. OpenCV v2 (http://opencv.org/downloads.html)
-3. A working webcam
+2. Python pip
+3. OpenCV v2 (http://opencv.org/downloads.html)
+4. A working webcam
 
 ### Installation
 ```
+pip install -r requirements.txt
 python setup.py install
 ```
 or for development
 ```
+pip install -r requirements.txt
 python setup.py develop
 ```
 
