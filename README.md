@@ -5,6 +5,16 @@
 2. OpenCV v2 (http://opencv.org/downloads.html)
 3. A working webcam
 
+### Installation
+```
+python setup.py install
+```
+or for development
+```
+python setup.py develop
+```
+
+
 ### Yale Image Database
 * Drop the 'yalefaces' folder in the root directory 
 * http://vision.ucsd.edu/datasets/yale_face_dataset_original/yalefaces.zip
