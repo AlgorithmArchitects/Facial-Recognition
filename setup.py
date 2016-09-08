@@ -7,5 +7,6 @@ setup(name='Facial Recognition',
       description='SE 321 Project 1',
       author='Algorithim Architects',
       packages=find_packages(),
-      entry_points={'console_scripts': ['facerec=facial_recognition.cli.facerec:facerec']}
+      entry_points={'console_scripts': ['facerec=facial_recognition.cli.facerec:facerec']},
+      package_data={'facial_recognition': ['includes/*']},
       )
