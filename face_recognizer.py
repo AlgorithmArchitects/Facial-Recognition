@@ -27,15 +27,26 @@ def get_images_and_labels(path):
         # Convert the image format into numpy array
         image = np.array(image_pil, 'uint8')
         # Get the label of the image
-        nbr = int(os.path.split(image_path)[1].split(".")[0].replace("subject", ""))
+        try:
+            nbr = int(os.path.split(image_path)[1].split(".")[0].replace("subject", ""))
+        except:
+            nbr = int(os.path.split(image_path)[1].split("_")[0].replace("subject", ""))
         # Detect the face in the image
-        faces = faceCascade.detectMultiScale(image)
+        #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        faces = faceCascade.detectMultiScale(
+            image,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30),
+            flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+        )
+        #faces = faceCascade.detectMultiScale(image)
         # If face is detected, append the face to images and the label to labels
         for (x, y, w, h) in faces:
             images.append(image[y: y + h, x: x + w])
             labels.append(nbr)
             cv2.imshow("Adding faces to traning set...", image[y: y + h, x: x + w])
-            cv2.waitKey(50)
+            cv2.waitKey(1)
     # return the images list and labels list
     return images, labels
 
@@ -49,18 +60,33 @@ cv2.destroyAllWindows()
 # Perform the tranining
 recognizer.train(images, np.array(labels))
 
-# Append the images with the extension .sad into image_paths
-image_paths = [os.path.join(path, f) for f in os.listdir(path) if f.endswith('.sad')]
-for image_path in image_paths:
-    predict_image_pil = Image.open(image_path).convert('L')
-    predict_image = np.array(predict_image_pil, 'uint8')
-    faces = faceCascade.detectMultiScale(predict_image)
+
+video_capture = cv2.VideoCapture(0)
+
+while True:
+    # Capture frame-by-frame
+    ret, frame = video_capture.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = faceCascade.detectMultiScale(
+        gray,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(30, 30),
+        flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+    )
+
+
+    # Draw a rectangle around the faces
     for (x, y, w, h) in faces:
-        nbr_predicted, conf = recognizer.predict(predict_image[y: y + h, x: x + w])
-        nbr_actual = int(os.path.split(image_path)[1].split(".")[0].replace("subject", ""))
-        if nbr_actual == nbr_predicted:
-            print "{} is Correctly Recognized with confidence {}".format(nbr_actual, conf)
-        else:
-            print "{} is Incorrect Recognized as {}".format(nbr_actual, nbr_predicted)
-        cv2.imshow("Recognizing Face", predict_image[y: y + h, x: x + w])
-        cv2.waitKey(1000)
+        nbr_predicted, conf = recognizer.predict(gray[y: y + h, x: x + w])
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        print "{} is recognized with confidence {}".format(nbr_predicted, conf)
+    # Display the resulting frame
+    cv2.imshow('Video', frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# When everything is done, release the capture
+video_capture.release()
+cv2.destroyAllWindows()
