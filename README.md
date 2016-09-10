@@ -23,11 +23,11 @@ python setup.py develop
 * http://vision.ucsd.edu/datasets/yale_face_dataset_original/yalefaces.zip
 
 
-### Face detection instructions (webcam.py)
+### Face detection instructions (face_recognizer.py)
 
 Run like this:
 ```python
-python facerec.py
+facerec recognize <selfie-folder>
 ```
 
 To exit, press Ctrl+C
