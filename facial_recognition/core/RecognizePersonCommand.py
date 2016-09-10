@@ -1,4 +1,3 @@
-import ICommand
 from argparse import ArgumentError
 class RecognizePersonCommand(ICommand):
     @staticmethod
