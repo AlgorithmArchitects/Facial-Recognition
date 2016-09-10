@@ -1,16 +1,17 @@
 #!/usr/bin/python
+from facial_recognition.constants import INCLUDES_DIRECTORY
 
-# Import the required modules
+import click
 import cv2, os
 import numpy as np
 from PIL import Image
 
 # For face detection we will use the Haar Cascade provided by OpenCV.
-cascadePath = "haarcascade_frontalface_default.xml"
-faceCascade = cv2.CascadeClassifier(cascadePath)
+CASCADE_PATH = os.path.join(INCLUDES_DIRECTORY, 'haarcascade_frontalface_default.xml')
+FACE_CASCADE = cv2.CascadeClassifier(CASCADE_PATH)
 
-# For face recognition we will the the LBPH Face Recognizer 
-recognizer = cv2.createLBPHFaceRecognizer()
+# For face recognition we will the the LBPH Face Recognizer
+RECOGNIZER = cv2.createLBPHFaceRecognizer()
 
 def get_images_and_labels(path):
     # Append all the absolute image paths in a list image_paths
@@ -33,14 +34,14 @@ def get_images_and_labels(path):
             nbr = int(os.path.split(image_path)[1].split("_")[0].replace("subject", ""))
         # Detect the face in the image
         #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        faces = faceCascade.detectMultiScale(
+        faces = FACE_CASCADE.detectMultiScale(
             image,
             scaleFactor=1.1,
             minNeighbors=5,
             minSize=(30, 30),
             flags=cv2.cv.CV_HAAR_SCALE_IMAGE
         )
-        #faces = faceCascade.detectMultiScale(image)
+        #faces = FACE_CASCADE.detectMultiScale(image)
         # If face is detected, append the face to images and the label to labels
         for (x, y, w, h) in faces:
             images.append(image[y: y + h, x: x + w])
@@ -50,43 +51,45 @@ def get_images_and_labels(path):
     # return the images list and labels list
     return images, labels
 
-# Path to the Yale Dataset
-path = './yalefaces'
-# Call the get_images_and_labels function and get the face images and the 
-# corresponding labels
-images, labels = get_images_and_labels(path)
-cv2.destroyAllWindows()
 
-# Perform the tranining
-recognizer.train(images, np.array(labels))
+@click.argument('path')
+@click.command()
+def recognize(path):
+    # Call the get_images_and_labels function and get the face images and the
+    # corresponding labels
+    images, labels = get_images_and_labels(path)
+    cv2.destroyAllWindows()
 
-
-video_capture = cv2.VideoCapture(0)
-
-while True:
-    # Capture frame-by-frame
-    ret, frame = video_capture.read()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = faceCascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(30, 30),
-        flags=cv2.cv.CV_HAAR_SCALE_IMAGE
-    )
+    # Perform the tranining
+    RECOGNIZER.train(images, np.array(labels))
 
 
-    # Draw a rectangle around the faces
-    for (x, y, w, h) in faces:
-        nbr_predicted, conf = recognizer.predict(gray[y: y + h, x: x + w])
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-        print "{} is recognized with confidence {}".format(nbr_predicted, conf)
-    # Display the resulting frame
-    cv2.imshow('Video', frame)
+    video_capture = cv2.VideoCapture(0)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    while True:
+        # Capture frame-by-frame
+        ret, frame = video_capture.read()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = FACE_CASCADE.detectMultiScale(
+            gray,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30),
+            flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+        )
 
-# When everything is done, release the capture
-video_capture.release()
-cv2.destroyAllWindows()
+
+        # Draw a rectangle around the faces
+        for (x, y, w, h) in faces:
+            nbr_predicted, conf = RECOGNIZER.predict(gray[y: y + h, x: x + w])
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            print "{} is recognized with confidence {}".format(nbr_predicted, conf)
+        # Display the resulting frame
+        cv2.imshow('Video', frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # When everything is done, release the capture
+    video_capture.release()
+    cv2.destroyAllWindows()
