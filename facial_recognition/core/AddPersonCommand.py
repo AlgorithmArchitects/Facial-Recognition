@@ -1,5 +1,6 @@
 import ICommand
 from argparse import ArgumentError
+
 class AddPersonCommand(ICommand):
     @staticmethod
     def name():

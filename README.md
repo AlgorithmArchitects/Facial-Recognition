@@ -27,7 +27,7 @@ python setup.py develop
 
 Run like this:
 ```python
-python webcam.py
+python facerec.py
 ```
 
 To exit, press Ctrl+C
