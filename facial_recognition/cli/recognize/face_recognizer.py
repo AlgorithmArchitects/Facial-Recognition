@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from facial_recognition.constants import INCLUDES_DIRECTORY
+from facial_recognition.core.person_info import get_person_info
 
 import click
 import cv2, os
@@ -75,29 +76,36 @@ def recognize(path):
 
     video_capture = cv2.VideoCapture(0)
 
-    while True:
-        # Capture frame-by-frame
-        ret, frame = video_capture.read()
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = FACE_CASCADE.detectMultiScale(
-            gray,
-            scaleFactor=1.1,
-            minNeighbors=5,
-            minSize=(30, 30),
-            flags=cv2.cv.CV_HAAR_SCALE_IMAGE
-        )
+    with get_person_info() as people:
+        while True:
+            # Capture frame-by-frame
+            ret, frame = video_capture.read()
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+            faces = FACE_CASCADE.detectMultiScale(
+                gray,
+                scaleFactor=1.1,
+                minNeighbors=5,
+                minSize=(30, 30),
+                flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+            )
+            # Draw a rectangle around the faces
+            for (x, y, w, h) in faces:
+                nbr_predicted, conf = RECOGNIZER.predict(gray[y: y + h, x: x + w])
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                try:
+                    person = people.get(nbr_predicted)
+                    print("{} is recognized with confidence {}"\
+                          .format(person['name'], conf))
+                except KeyError:
+                    print ("Id {} is recognized with confidence {},",
+                           " but no person information exists")\
+                          .format(nbr_predicted, conf)
+            # Display the resulting frame
+            cv2.imshow('Video', frame)
 
-        # Draw a rectangle around the faces
-        for (x, y, w, h) in faces:
-            nbr_predicted, conf = RECOGNIZER.predict(gray[y: y + h, x: x + w])
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            print "{} is recognized with confidence {}".format(nbr_predicted, conf)
-        # Display the resulting frame
-        cv2.imshow('Video', frame)
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
     # When everything is done, release the capture
     video_capture.release()
