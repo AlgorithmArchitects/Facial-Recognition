@@ -98,8 +98,7 @@ def recognize(path):
                     print("{} is recognized with confidence {}"\
                           .format(person['name'], conf))
                 except KeyError:
-                    print ("Id {} is recognized with confidence {},",
-                           " but no person information exists")\
+                    print "Id {} is recognized with confidence {}, but no person information exists"\
                           .format(nbr_predicted, conf)
             # Display the resulting frame
             cv2.imshow('Video', frame)

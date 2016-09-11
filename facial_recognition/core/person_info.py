@@ -47,7 +47,7 @@ class PersonInfo(object):
         return person
 
     def close(self):
-        self.dataframe.to_csv(self.csv_path, index=False)
+        self.dataframe.to_csv(self.csv_path, index=True, index_label='id', header=False)
 
 
 
