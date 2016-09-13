@@ -5,6 +5,7 @@ from facial_recognition.core.face_recognizer import (RECOGNIZER,
 import click
 import cv2
 import numpy as np
+from ...core import RecognizerSerializer as rs
 
 @click.argument('path')
 @click.command()
@@ -16,4 +17,6 @@ def train(path):
 
     # Perform the tranining
     RECOGNIZER.train(images, np.array(labels))
+
     # TODO: Serialize trained model
+    rs.RecognizerSerializer.serialize_recognizer(RECOGNIZER)

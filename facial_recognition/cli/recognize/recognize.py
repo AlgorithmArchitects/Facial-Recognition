@@ -6,19 +6,14 @@ from facial_recognition.core.person_info import get_person_info
 import click
 import cv2
 import numpy as np
+from ...core import RecognizerSerializer as rs
 
-@click.argument('path')
+
 @click.command()
-def recognize(path):
-    # TODO: Remove training part, deserialize instead.
+def recognize():
     # Call the get_images_and_labels function and get the face images and the
     # corresponding labels
-    images, labels = get_images_and_labels(path)
-    cv2.destroyAllWindows()
-
-    # Perform the tranining
-    RECOGNIZER.train(images, np.array(labels))
-
+    RECOGNIZER = rs.RecognizerSerializer.deserialize_recognizer()
 
     video_capture = cv2.VideoCapture(0)
 
