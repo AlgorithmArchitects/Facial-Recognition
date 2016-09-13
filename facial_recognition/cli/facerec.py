@@ -1,13 +1,12 @@
 import click
-from facial_recognition.cli.csv.create_csv import csv
-from facial_recognition.cli.recognize.face_recognizer import recognize, train
+from facial_recognition.cli.recognize.recognize import recognize
+from facial_recognition.cli.train.train import train
 
 
 @click.group()
 def facerec():
     pass
 
-facerec.add_command(csv)
 facerec.add_command(recognize)
 facerec.add_command(train)
 
