@@ -1,7 +1,7 @@
 import unittest
 import os
-from .. import constants
-from ..core.RecognizerSerializer import RecognizerSerializer
+from facial_recognition import constants
+from facial_recognition.core.RecognizerSerializer import RecognizerSerializer
 
 class TestSerializerMethods(unittest.TestCase):
     @classmethod
