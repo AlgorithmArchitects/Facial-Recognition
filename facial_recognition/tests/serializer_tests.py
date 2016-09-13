@@ -1,5 +1,5 @@
 import unittest
-from core.RecognizerSerializer import RecognizerSerializer
+from facial_recognition.core.RecognizerSerializer import RecognizerSerializer
 
 class TestSerializerMethods(unittest.TestCase):
     def test_basic_serialize_deserialize(self):
