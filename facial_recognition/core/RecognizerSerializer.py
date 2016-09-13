@@ -1,11 +1,11 @@
-import pickle
+import pickle, os
 class RecognizerSerializer():
     @staticmethod
     def deserialize_recognizer():
         if(os.path.isfile("C:/csv_recognizer_info")):
             return pickle.load(open("C:/csv_recognizer_info", "rb"))
         else:
-            raise FileNotFoundError
+            raise os.FileNotFoundError
     
     @staticmethod
     def serialize_recognizer(recognizer):
