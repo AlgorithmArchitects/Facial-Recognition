@@ -35,7 +35,7 @@ def recognize():
                 nbr_predicted, conf = RECOGNIZER.predict(gray[y: y + h, x: x + w])
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
                 try:
-                    person = people.get(nbr_predicted)
+                    person = people.get(id=nbr_predicted)
                     print("{} is recognized with confidence {}"\
                           .format(person['name'], conf))
                 except KeyError:
