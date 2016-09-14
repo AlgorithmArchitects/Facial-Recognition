@@ -22,3 +22,4 @@ def add(name, csv):
                     click.echo("Person with id " + str(id) + " was not found")
                 info = click.prompt("Write some information about this person to add")
                 people.add(name, info)
+    # TODO take picture
