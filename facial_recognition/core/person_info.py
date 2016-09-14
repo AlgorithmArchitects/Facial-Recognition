@@ -34,21 +34,36 @@ class PersonInfo(object):
 
         self.dataframe = self.dataframe.set_index(['id'])
 
-    def add(self, id, name, info):
-        self.dataframe = self.dataframe.append([[id, name, info]])
+    def add(self, name, info):
+        self.dataframe = self.dataframe.append({'name': name, 'info': info}, ignore_index=True)
 
-    def get(self, id):
+    def get(self, id=None, name=None):
         """
         Returns a dict of a person (keys: id, name, info)
         Raises a KeyError if it's not there
         """
-        row = self.dataframe.loc[[id]].to_dict()
-        person = {'id': id, 'name': row['name'][id], 'info': row['info'][id]}
+        try:
+           row = self.dataframe.loc[[id] if id is not None else self.dataframe['name'] == name].\
+                   reset_index(level=0).to_dict()
+        except KeyError:
+            raise PersonNotFoundException("No person with given id")
+
+        try:
+            if not id:
+                id = row['id'][0]
+        except KeyError:
+            raise PersonNotFoundException("No person with given name")
+
+        person = {'id': id, 'name': row['name'][0], 'info': row['info'][0]}
+
         return person
 
     def close(self):
         self.dataframe.to_csv(self.csv_path, index=True, index_label='id', header=False)
 
+
+class PersonNotFoundException(Exception):
+    pass
 
 
 @contextmanager
