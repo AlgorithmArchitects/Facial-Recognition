@@ -1,4 +1,4 @@
-from facial_recognition.constants import USER_DATA_DIRECTORY
+from facial_recognition.constants import USER_DATA_DIRECTORY, DEFAULT_PICTURES_DIRECTORY
 from facial_recognition.core.person_info import get_person_info, PersonNotFoundException
 import click
 import cv2
@@ -32,13 +32,12 @@ def add(name, csv):
     # dir already exists
     except OSError:
         pass
-    pictures_dir = os.path.join(USER_DATA_DIRECTORY, 'pics')
     try:
-        os.mkdir(pictures_dir)
+        os.mkdir(DEFAULT_PICTURES_DIRECTORY)
     # dir already exists
     except OSError:
         pass
-    this_person_dir = os.path.join(pictures_dir, str(id))
+    this_person_dir = os.path.join(DEFAULT_PICTURES_DIRECTORY , str(id))
     try:
         os.mkdir(this_person_dir)
     # dir already exists
@@ -52,3 +51,4 @@ def add(name, csv):
         while os.path.isfile(os.path.join(this_person_dir, file_name.format(file_number))):
             file_number += 1
         cv2.imwrite(os.path.join(this_person_dir, file_name.format(file_number)), frame)
+        click.echo('Picture added. You will now have to retrain using the "facerec train" command')
