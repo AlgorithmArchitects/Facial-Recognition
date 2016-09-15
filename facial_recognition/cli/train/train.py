@@ -19,5 +19,4 @@ def train(path):
     # Perform the tranining
     RECOGNIZER.train(images, np.array(labels))
 
-    # TODO: Serialize trained model
     rs.RecognizerSerializer.serialize_recognizer(RECOGNIZER)
