@@ -10,7 +10,8 @@ class RecognizerSerializer():
     def deserialize_recognizer():
         if os.path.isfile(SAVE_PATH):
             RECOGNIZER = cv2.createLBPHFaceRecognizer()
-            return RECOGNIZER.load(SAVE_PATH)
+            RECOGNIZER.load(SAVE_PATH)
+            return RECOGNIZER
         else:
             raise os.FileNotFoundError
 
