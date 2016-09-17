@@ -3,6 +3,7 @@ from facial_recognition.core.person_info import get_person_info, PersonNotFoundE
 import click
 import cv2
 import os
+import time
 
 
 @click.command()
@@ -50,10 +51,15 @@ def add(name, csv):
         pass
     if click.confirm("Take picture of  " + name + "?"):
         video_capture = cv2.VideoCapture(0)
-        ret, frame = video_capture.read()
-        file_name = 'subject{}.jpg'
-        file_number = 0
-        while os.path.isfile(os.path.join(this_person_dir, file_name.format(file_number))):
-            file_number += 1
-        cv2.imwrite(os.path.join(this_person_dir, file_name.format(file_number)), frame)
+        for i in range(0, 5):
+            take_picture(video_capture, this_person_dir)
+            time.sleep(.5)
         click.echo('Picture added. You will now have to retrain using the "facerec train" command')
+
+def take_picture(video_capture, this_person_dir):
+    ret, frame = video_capture.read()
+    file_name = 'subject{}.jpg'
+    file_number = 0
+    while os.path.isfile(os.path.join(this_person_dir, file_name.format(file_number))):
+        file_number += 1
+    cv2.imwrite(os.path.join(this_person_dir, file_name.format(file_number)), frame)
