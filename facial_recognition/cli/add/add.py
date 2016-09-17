@@ -27,6 +27,11 @@ def add(name, csv):
                 info = click.prompt("Write some information about this person to add")
                 people.add(name, info)
 
+    # person is guaranteed to exist
+    with get_person_info(csv) as people:
+        person = people.get(name=name)
+        id = person['id']
+
     try:
         os.mkdir(USER_DATA_DIRECTORY)
     # dir already exists
